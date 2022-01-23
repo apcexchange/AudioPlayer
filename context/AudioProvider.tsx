@@ -2,11 +2,9 @@ import React, { useEffect } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 
-interface MusicListProps {
-  //   music: string;r
-}
+interface AudioProviderProps {}
 
-const MusicList = (_props: MusicListProps) => {
+const AudioProvider = (props: AudioProviderProps) => {
   const getPermission = async () => {
     const permission = await MediaLibrary.getPermissionsAsync();
     console.log(permission);
@@ -18,12 +16,12 @@ const MusicList = (_props: MusicListProps) => {
 
   return (
     <View style={styles.container}>
-      <Text>MusicList</Text>
+      <Text>AudioProvider</Text>
     </View>
   );
 };
 
-export default MusicList;
+export default AudioProvider;
 
 const styles = StyleSheet.create({
   container: {},
