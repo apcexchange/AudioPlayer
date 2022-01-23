@@ -7,15 +7,6 @@ interface MusicListProps {
 }
 
 const MusicList = (_props: MusicListProps) => {
-  const getPermission = async () => {
-    const permission = await MediaLibrary.getPermissionsAsync();
-    console.log(permission);
-  };
-
-  useEffect(() => {
-    getPermission();
-  }, []);
-
   return (
     <View style={styles.container}>
       <Text>MusicList</Text>
