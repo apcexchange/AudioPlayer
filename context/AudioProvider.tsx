@@ -8,6 +8,7 @@ export const AudioContext = createContext({});
 
 const AudioProvider = ({ children }: string | any) => {
   const [audioFiles, setAudioFiles] = useState([]);
+  const [permissionError, setPermissionError] = useState(false);
 
   const permissionAlert = () => {
     Alert.alert(
@@ -35,20 +36,25 @@ const AudioProvider = ({ children }: string | any) => {
           getAudioFiles();
         }
 
+        if (permission.status === "denied" && permission.canAskAgain) {
+          permissionAlert();
+        }
+
         if (!permission.granted && permission.canAskAgain) {
           request();
+        }
 
-          if (permission.status === "denied" && permission.canAskAgain) {
-            permissionAlert();
-          }
+        // if (!permission.granted && permission.canAskAgain) {
+        //   permissionAlert();
+        // }
 
-          if (permission.status === "granted") {
-            getAudioFiles();
-          }
+        if (permission.status === "granted") {
+          getAudioFiles();
+        }
 
-          if (permission.status === "denied" && !permission.canAskAgain) {
-            Alert.alert("You cannot use this App without the permissions");
-          }
+        if (permission.status === "denied" && !permission.canAskAgain) {
+          setPermissionError(true);
+          console.log(permissionError);
         }
       })
       .catch((error) => {
@@ -65,7 +71,6 @@ const AudioProvider = ({ children }: string | any) => {
       mediaType: "audio",
       first: media.totalCount,
     }).catch((error) => console.log(error));
-    // console.log(media.assets.length);
 
     setAudioFiles(media.assets);
   };
@@ -74,9 +79,36 @@ const AudioProvider = ({ children }: string | any) => {
     request();
   }, []);
 
-  return (
-    <AudioContext.Provider value={audioFiles}>{children}</AudioContext.Provider>
-  );
+  if (permissionError && permissionError) {
+    return (
+      <View style={styles.errorView}>
+        <Text style={styles.error}>
+          you have refused permission, you need to give acces for the App to
+          read your music
+        </Text>
+      </View>
+    );
+  } else {
+    return (
+      <AudioContext.Provider value={audioFiles}>
+        {children}
+      </AudioContext.Provider>
+    );
+  }
 };
 
 export default AudioProvider;
+
+const styles = StyleSheet.create({
+  error: {
+    fontSize: 20,
+    margin: 10,
+    padding: 10,
+  },
+
+  errorView: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

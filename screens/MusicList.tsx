@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Text, View, StyleSheet, ScrollView } from "react-native";
+import { Text, View, StyleSheet, ScrollView, FlatList } from "react-native";
 import { AudioContext } from "../context/AudioProvider";
 interface MusicListProps {
   //   music: string;r
@@ -7,16 +7,22 @@ interface MusicListProps {
 
 const MusicList = (_props: MusicListProps) => {
   const audio = useContext(AudioContext);
-  console.log("item logged:", audio);
 
   return (
-    <ScrollView>
-      {audio.map((audio) => (
+    <FlatList
+      data={audio}
+      renderItem={({ item }) => (
+        <View>
+          <Text style={styles.list}>{item.filename}</Text>
+        </View>
+      )}
+      keyExtractor={(item) => item.id}
+    />
+    /* {audio.map((audio) => (
         <Text key={audio.id} style={styles.list}>
           {audio.filename}
         </Text>
-      ))}
-    </ScrollView>
+      ))} */
   );
 };
 
