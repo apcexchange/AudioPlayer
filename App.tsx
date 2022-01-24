@@ -10,13 +10,11 @@ import MusicList from "./screens/MusicList";
 
 export default function App() {
   return (
-    // <AudioProvider>
-    //   <NavigationContainer>
-    //     <AppNavigator />
-    //   </NavigationContainer>
-    // </AudioProvider>
-
-    <MusicListItem />
+    <AudioProvider>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    </AudioProvider>
   );
 }
 

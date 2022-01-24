@@ -1,23 +1,66 @@
 import * as React from "react";
-import { Text, View, StyleSheet, SafeAreaView, Dimensions } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Dimensions,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { Entypo } from "@expo/vector-icons";
+import Colors from "../assets/colors/Colors";
 
 interface MusicListItemProps {}
 
 const { height, width } = Dimensions.get("screen");
 
-const MusicListItem = (props: MusicListItemProps) => {
+const getThumbnailText = (filename: string) => filename[0];
+
+const convertTime = (minutes) => {
+  if (minutes) {
+    const hrs = minutes / 60;
+    const minute = hrs.toString().split(".")[0];
+    const percent = parseInt(hrs.toString().split(".")[1].slice(0, 2));
+    const sec = Math.ceil((60 * percent) / 100);
+
+    if (parseInt(minute) < 10 && sec < 10) {
+      return `0${minute}:0${sec}`;
+    }
+    if (parseInt(minute) < 10) {
+      return `0${minute}:${sec}`;
+    }
+
+    if (sec < 10) {
+      return `${minute}:0${sec}`;
+    }
+    return `${minute}:${sec}`;
+  }
+};
+const MusicListItem = ({ title, duration, onPress, onAudioPress }) => {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <View style={styles.thumbnailContainer}>
-          <Text style={styles.thumbnail}> A </Text>
-        </View>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>this is the title of the music</Text>
-        </View>
-        <View>
-          <Entypo name="dots-three-vertical" size={24} color="black" />
+        <TouchableWithoutFeedback onPress={onAudioPress}>
+          <View style={styles.subContainer}>
+            <View style={styles.thumbnailContainer}>
+              <Text style={styles.thumbnail}> {getThumbnailText(title)} </Text>
+            </View>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title} numberOfLines={1}>
+                {title}
+              </Text>
+              <Text style={styles.time}>{convertTime(duration)}</Text>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+
+        <View style={styles.icon}>
+          <Entypo
+            name="dots-three-vertical"
+            size={20}
+            color="black"
+            onPress={onPress}
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -30,14 +73,18 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    width: width / 3,
+    justifyContent: "space-between",
+    alignContent: "center",
+    alignSelf: "center",
+    marginVertical: 10,
+    width: width - 40,
   },
   thumbnail: {
-    fontSize: 30,
+    fontSize: 25,
+    color: Colors.WHITE,
   },
   thumbnailContainer: {
-    backgroundColor: "red",
+    backgroundColor: "grey",
     height: 50,
     width: 50,
     borderRadius: 100,
@@ -46,5 +93,20 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
+  },
+  time: {
+    fontSize: 14,
+    color: Colors.LIGHT_GRAY,
+  },
+  subContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  titleContainer: {
+    marginLeft: 15,
+    width: width - 160,
+  },
+  icon: {
+    padding: 8,
   },
 });
