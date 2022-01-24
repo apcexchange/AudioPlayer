@@ -1,13 +1,14 @@
-import React, { useEffect, createContext } from "react";
+import React, { useEffect, createContext, useState } from "react";
 import { Text, View, StyleSheet, Alert } from "react-native";
 import * as MediaLibrary from "expo-media-library";
-import { getPermissionsAsync } from "expo-media-library";
 
 interface AudioProviderProps {}
 
-const AudioContext = createContext({});
+export const AudioContext = createContext({});
 
-const AudioProvider = ({ children }: any) => {
+const AudioProvider = ({ children }: string | any) => {
+  const [audioFiles, setAudioFiles] = useState([]);
+
   const permissionAlert = () => {
     Alert.alert(
       "Permission is required",
@@ -15,7 +16,7 @@ const AudioProvider = ({ children }: any) => {
       [
         {
           text: "give permission",
-          onPress: () => getPermission(),
+          onPress: () => request(),
         },
         {
           text: "cancel",
@@ -25,49 +26,57 @@ const AudioProvider = ({ children }: any) => {
     );
   };
 
-  const getPermission = async () => {
-    const permission = await MediaLibrary.getPermissionsAsync();
-    console.log(permission);
-    if (permission.granted) {
-      //get all file
-      getAudioFiles();
-    }
-    if (!permission.granted && permission.canAskAgain) {
-      const { status, canAskAgain } =
-        await MediaLibrary.requestPermissionsAsync();
+  const request = async () => {
+    await MediaLibrary.requestPermissionsAsync()
+      .then((permission) => {
+        console.log(permission);
 
-      if (status === "denied" && canAskAgain) {
-        permissionAlert();
-      }
+        if (permission.granted) {
+          getAudioFiles();
+        }
 
-      if (status === "granted") {
-        //get all files
-        getAudioFiles();
-      }
+        if (!permission.granted && permission.canAskAgain) {
+          request();
 
-      if (status === "denied" && !canAskAgain) {
-        Alert.alert("You cannot use this App without the permissions");
-        getPermission();
-      }
-    }
+          if (permission.status === "denied" && permission.canAskAgain) {
+            permissionAlert();
+          }
+
+          if (permission.status === "granted") {
+            getAudioFiles();
+          }
+
+          if (permission.status === "denied" && !permission.canAskAgain) {
+            Alert.alert("You cannot use this App without the permissions");
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const getAudioFiles = async () => {
-    const media = await MediaLibrary.getAssetsAsync({
+    let media = await MediaLibrary.getAssetsAsync({
       mediaType: "audio",
-    });
-    console.log(media);
+    }).catch((error) => console.log(error));
+
+    media = await MediaLibrary.getAssetsAsync({
+      mediaType: "audio",
+      first: media.totalCount,
+    }).catch((error) => console.log(error));
+    // console.log(media.assets.length);
+
+    setAudioFiles(media.assets);
   };
 
   useEffect(() => {
-    getPermission();
+    request();
   }, []);
 
-  return <AudioContext.Provider value={[]}>{children}</AudioContext.Provider>;
+  return (
+    <AudioContext.Provider value={audioFiles}>{children}</AudioContext.Provider>
+  );
 };
 
 export default AudioProvider;
-
-const styles = StyleSheet.create({
-  container: {},
-});

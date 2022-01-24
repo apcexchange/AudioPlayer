@@ -1,21 +1,27 @@
-import React, { useEffect } from "react";
-import { Text, View, StyleSheet } from "react-native";
-import * as MediaLibrary from "expo-media-library";
-
+import React, { useContext } from "react";
+import { Text, View, StyleSheet, ScrollView } from "react-native";
+import { AudioContext } from "../context/AudioProvider";
 interface MusicListProps {
   //   music: string;r
 }
 
 const MusicList = (_props: MusicListProps) => {
+  const audio = useContext(AudioContext);
+  console.log("item logged:", audio);
+
   return (
-    <View style={styles.container}>
-      <Text>MusicList</Text>
-    </View>
+    <ScrollView>
+      {audio.map((audio) => (
+        <Text key={audio.id} style={styles.list}>
+          {audio.filename}
+        </Text>
+      ))}
+    </ScrollView>
   );
 };
 
 export default MusicList;
 
 const styles = StyleSheet.create({
-  container: {},
+  list: { margin: 10, fontSize: 18 },
 });
