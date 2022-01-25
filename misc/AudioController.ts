@@ -9,11 +9,11 @@ export const play = async (playBackObject, uri) => {
 };
 
 //pause
-export const pause = async (playBackObject, uri) => {
+export const pause = async (playBackObject) => {
   try {
-    return await playBackObject.setStatusAsync({ uri }, { shouldPlay: false });
+    return await playBackObject.setStatusAsync({ shouldPlay: false });
   } catch (error) {
-    console.log("error pausing", error.message);
+    console.log("error pausing", error);
   }
 };
 
@@ -22,7 +22,7 @@ export const resume = async (playBackObject) => {
   try {
     return await playBackObject.playAsync();
   } catch (error) {
-    console.log("error pausing", error.message);
+    console.log("error pausing", error);
   }
 };
 
@@ -34,6 +34,6 @@ export const playNext = async (playBackObject, uri) => {
     await playBackObject.unloadAsync();
     return await play(playBackObject, uri);
   } catch (error) {
-    console.log("error selecting Next", error.message);
+    console.log("error selecting Next", error);
   }
 };
