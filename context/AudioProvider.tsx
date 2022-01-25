@@ -9,6 +9,9 @@ export const AudioContext = createContext({});
 const AudioProvider = ({ children }: string | any) => {
   const [audioFiles, setAudioFiles] = useState([]);
   const [permissionError, setPermissionError] = useState(false);
+  const [soundObject, setSoundObject] = useState(null);
+  const [playBackObject, setPlayBackObject] = useState(null);
+  const [currentAudio, setCurrentAudio] = useState({});
 
   const permissionAlert = () => {
     Alert.alert(
@@ -21,7 +24,6 @@ const AudioProvider = ({ children }: string | any) => {
         },
         {
           text: "cancel",
-          onPress: () => permissionAlert(),
         },
       ]
     );
@@ -90,7 +92,18 @@ const AudioProvider = ({ children }: string | any) => {
     );
   } else {
     return (
-      <AudioContext.Provider value={audioFiles}>
+      <AudioContext.Provider
+        value={{
+          audioFiles,
+          playBackObject,
+          soundObject,
+          currentAudio,
+          setCurrentAudio,
+          setSoundObject,
+          setAudioFiles,
+          setPlayBackObject,
+        }}
+      >
         {children}
       </AudioContext.Provider>
     );

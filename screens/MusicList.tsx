@@ -4,19 +4,31 @@ import MusicListItem from "../components/MusicListItem";
 import OptionModal from "../components/OptionModal";
 import { AudioContext } from "../context/AudioProvider";
 import { Audio } from "expo-av";
+import { pause, play, playNext, resume } from "../misc/AudioController";
 
 interface MusicListProps {
   //   music: string;r
 }
 
-const MusicList = (_props: MusicListProps) => {
-  const audio = useContext(AudioContext);
+const MusicList = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState({});
-  const [soundObject, setSoundObject] = useState(null);
-  const [playBackObject, setPlayBackObject] = useState(null);
-  const [currentAudio, setCurrentAudio] = useState({});
+  //   const [soundObject, setSoundObject] = useState(null);
+  //   const [playBackObject, setPlayBackObject] = useState(null);
+  //   const [currentAudio, setCurrentAudio] = useState({});
 
+  // const audio = useContext(AudioContext);
+  const {
+    audioFiles,
+    currentAudio,
+    playBackObject,
+    soundObject,
+    setSoundObject,
+    setPlayBackObject,
+    setCurrentAudio,
+  } = useContext(AudioContext);
+
+  console.log(currentAudio);
   const onPressPlay = () => {
     console.log("onPressPlay");
   };
@@ -29,41 +41,46 @@ const MusicList = (_props: MusicListProps) => {
     console.log("onPressPlayList");
   };
 
-  async function handleAudioPress(audio) {
-    //firts time play
-    if (soundObject === null) {
-      const playBackObject = new Audio.Sound();
-      const status = await playBackObject
-        .loadAsync({ uri: audio.uri }, { shouldPlay: true })
-        .catch((error) => {});
-      setPlayBackObject(playBackObject);
-      setSoundObject(status);
-      setCurrentAudio(audio);
-      return;
-    }
+  async function handleAudioPress(audioFiles) {
+    try {
+      //firts time play
+      if (soundObject === null) {
+        const playBackObject = new Audio.Sound();
+        const status = await play(playBackObject, audioFiles.uri);
+        setPlayBackObject(playBackObject);
+        setSoundObject(status);
+        setCurrentAudio(audioFiles);
+        return;
+      }
 
-    // pause
-    if (soundObject.isLoaded && soundObject.isPlaying) {
-      const status = await playBackObject.setStatusAsync({ shouldPlay: false });
-      setSoundObject(status);
-    }
+      // pause
+      if (soundObject.isLoaded && soundObject.isplaying) {
+        const status = await pause(playBackObject);
+        setSoundObject(status);
+      }
 
-    //resume
+      //resume
 
-    if (
-      soundObject.isLoaded &&
-      !soundObject.isPlaying &&
-      currentAudio.id === audio.id
-    ) {
-      const status = await playBackObject.playAsync();
-      setSoundObject(status);
+      if (soundObject.isLoaded && !soundObject.isPlaying) {
+        const status = await resume(playBackObject);
+        setSoundObject(status);
+      }
+
+      //select another audio file
+
+      if (soundObject.isLoaded && currentAudio.id !== audioFiles.id) {
+        const status = await playNext(playBackObject, audioFiles.uri);
+        setSoundObject(status);
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
   return (
     <>
       <FlatList
-        data={audio}
+        data={audioFiles}
         renderItem={({ item }) => {
           return (
             <MusicListItem
