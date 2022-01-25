@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import {
   Text,
   View,
@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import Colors from "../assets/colors/Colors";
+import { AudioContext } from "../context/AudioProvider";
 
 interface MusicListItemProps {}
 
@@ -16,7 +17,7 @@ const { height, width } = Dimensions.get("screen");
 
 const getThumbnailText = (filename: string) => filename[0];
 
-const convertTime = (minutes) => {
+const convertTime = (minutes: number) => {
   if (minutes) {
     const hrs = minutes / 60;
     const minute = hrs.toString().split(".")[0];
@@ -36,14 +37,31 @@ const convertTime = (minutes) => {
     return `${minute}:${sec}`;
   }
 };
-const MusicListItem = ({ title, duration, onPress, onAudioPress }) => {
+
+const renderPlayPauseIcon = (isPlaying) => {
+  if (isPlaying) {
+    return <Entypo name="controller-paus" size={20} color="black" />;
+  } else {
+    return <Entypo name="controller-play" size={20} color="black" />;
+  }
+};
+
+const MusicListItem = ({
+  title,
+  duration,
+  onPress,
+  onAudioPress,
+  isPlaying,
+}) => {
   return (
     <SafeAreaView>
       <View style={styles.container}>
         <TouchableWithoutFeedback onPress={onAudioPress}>
           <View style={styles.subContainer}>
             <View style={styles.thumbnailContainer}>
-              <Text style={styles.thumbnail}> {getThumbnailText(title)} </Text>
+              <Text style={styles.thumbnail}>
+                {renderPlayPauseIcon(isPlaying)}
+              </Text>
             </View>
             <View style={styles.titleContainer}>
               <Text style={styles.title} numberOfLines={1}>

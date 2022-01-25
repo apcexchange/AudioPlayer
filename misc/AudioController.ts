@@ -1,15 +1,19 @@
 //play
 
-export const play = async (playBackObject, uri) => {
+import { Sound } from "expo-av/build/Audio";
+
+export const play = async (playBackObject: Sound, uri: string) => {
   try {
     return await playBackObject.loadAsync({ uri }, { shouldPlay: true });
   } catch (error) {
-    console.log("error playing", error.message);
+    console.log("error playing", error);
   }
 };
 
 //pause
-export const pause = async (playBackObject) => {
+export const pause = async (playBackObject: {
+  setStatusAsync: (arg0: { shouldPlay: boolean }) => any;
+}) => {
   try {
     return await playBackObject.setStatusAsync({ shouldPlay: false });
   } catch (error) {
@@ -18,7 +22,7 @@ export const pause = async (playBackObject) => {
 };
 
 //resume
-export const resume = async (playBackObject) => {
+export const resume = async (playBackObject: { playAsync: () => any }) => {
   try {
     return await playBackObject.playAsync();
   } catch (error) {
@@ -28,7 +32,10 @@ export const resume = async (playBackObject) => {
 
 //select new music
 
-export const playNext = async (playBackObject, uri) => {
+export const playNext = async (
+  playBackObject: { stopAsync: () => any; unloadAsync: () => any },
+  uri: string
+) => {
   try {
     await playBackObject.stopAsync();
     await playBackObject.unloadAsync();

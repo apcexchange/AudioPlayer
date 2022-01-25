@@ -13,15 +13,13 @@ interface MusicListProps {
 const MusicList = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState({});
-  // const [soundObject, setSoundObject] = useState(null);
-  //   const [playBackObject, setPlayBackObject] = useState(null);
-  //   const [currentAudio, setCurrentAudio] = useState({});
 
-  // const audio = useContext(AudioContext);
   const {
     audioFiles,
     currentAudio,
     soundObject,
+    isPlaying,
+    setIsPlaying,
     playBackObject,
     setSoundObject,
     setCurrentAudio,
@@ -49,6 +47,7 @@ const MusicList = () => {
         setSoundObject(status);
         setCurrentAudio(audioFiles);
         setPlayBackObject(playBackObject);
+        setIsPlaying(true);
         return;
       }
 
@@ -59,6 +58,7 @@ const MusicList = () => {
       ) {
         const status = await resume(playBackObject);
         setSoundObject(status);
+        setIsPlaying(true);
       }
 
       if (
@@ -68,11 +68,13 @@ const MusicList = () => {
       ) {
         const status = await pause(playBackObject);
         setSoundObject(status);
+        setIsPlaying(false);
       }
       if (soundObject.isLoaded && currentAudio.id !== audioFiles.id) {
         const status = await playNext(playBackObject, audioFiles.uri);
         setSoundObject(status);
         setCurrentAudio(audioFiles);
+        setIsPlaying(true);
       }
     } catch (error) {
       console.log(error);
@@ -93,6 +95,7 @@ const MusicList = () => {
                 setModalVisible(true);
               }}
               onAudioPress={() => handleAudioPress(item)}
+              isPlaying={isPlaying}
             />
           );
         }}
