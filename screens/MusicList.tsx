@@ -3,6 +3,8 @@ import { Text, View, StyleSheet, ScrollView, FlatList } from "react-native";
 import MusicListItem from "../components/MusicListItem";
 import OptionModal from "../components/OptionModal";
 import { AudioContext } from "../context/AudioProvider";
+import { Audio } from "expo-av";
+
 interface MusicListProps {
   //   music: string;r
 }
@@ -11,6 +13,9 @@ const MusicList = (_props: MusicListProps) => {
   const audio = useContext(AudioContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState({});
+  const [soundObject, setSoundObject] = useState(null);
+  const [playBackObject, setPlayBackObject] = useState(null);
+  const [currentAudio, setCurrentAudio] = useState({});
 
   const onPressPlay = () => {
     console.log("onPressPlay");
@@ -24,8 +29,35 @@ const MusicList = (_props: MusicListProps) => {
     console.log("onPressPlayList");
   };
 
-  function handleAudioPress() {
-    console.log("onAudio...");
+  async function handleAudioPress(audio) {
+    //firts time play
+    if (soundObject === null) {
+      const playBackObject = new Audio.Sound();
+      const status = await playBackObject
+        .loadAsync({ uri: audio.uri }, { shouldPlay: true })
+        .catch((error) => {});
+      setPlayBackObject(playBackObject);
+      setSoundObject(status);
+      setCurrentAudio(audio);
+      return;
+    }
+
+    // pause
+    if (soundObject.isLoaded && soundObject.isPlaying) {
+      const status = await playBackObject.setStatusAsync({ shouldPlay: false });
+      setSoundObject(status);
+    }
+
+    //resume
+
+    if (
+      soundObject.isLoaded &&
+      !soundObject.isPlaying &&
+      currentAudio.id === audio.id
+    ) {
+      const status = await playBackObject.playAsync();
+      setSoundObject(status);
+    }
   }
 
   return (
@@ -41,7 +73,7 @@ const MusicList = (_props: MusicListProps) => {
                 setCurrentItem(item);
                 setModalVisible(true);
               }}
-              onAudioPress={handleAudioPress}
+              onAudioPress={() => handleAudioPress(item)}
             />
           );
         }}
