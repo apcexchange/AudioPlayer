@@ -20,15 +20,15 @@ const MusicList = () => {
   // const audio = useContext(AudioContext);
   const {
     audioFiles,
+    setAudioFiles,
     currentAudio,
-    playBackObject,
+    setCurrentAudio,
     soundObject,
     setSoundObject,
+    playBackObject,
     setPlayBackObject,
-    setCurrentAudio,
   } = useContext(AudioContext);
 
-  console.log(currentAudio);
   const onPressPlay = () => {
     console.log("onPressPlay");
   };
@@ -50,19 +50,30 @@ const MusicList = () => {
         setPlayBackObject(playBackObject);
         setSoundObject(status);
         setCurrentAudio(audioFiles);
+        console.log(audioFiles);
+
         return;
       }
 
       // pause
-      if (soundObject.isLoaded && soundObject.isplaying) {
-        const status = await pause(playBackObject);
+      if (
+        soundObject.isLoaded &&
+        soundObject.isplaying &&
+        currentAudio.id === audioFiles.id
+      ) {
+        const status = await pause(playBackObject, audioFiles.uri);
         setSoundObject(status);
       }
 
       //resume
 
-      if (soundObject.isLoaded && !soundObject.isPlaying) {
+      if (
+        soundObject.isLoaded &&
+        !soundObject.isPlaying &&
+        currentAudio.id === audioFiles.id
+      ) {
         const status = await resume(playBackObject);
+        setSoundObject(status);
         setSoundObject(status);
       }
 
@@ -71,6 +82,7 @@ const MusicList = () => {
       if (soundObject.isLoaded && currentAudio.id !== audioFiles.id) {
         const status = await playNext(playBackObject, audioFiles.uri);
         setSoundObject(status);
+        // setCurrentAudio(audioFiles.uri);
       }
     } catch (error) {
       console.log(error);

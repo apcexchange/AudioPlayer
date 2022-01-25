@@ -9,9 +9,9 @@ export const play = async (playBackObject, uri) => {
 };
 
 //pause
-export const pause = async (playBackObject) => {
+export const pause = async (playBackObject, uri) => {
   try {
-    return await playBackObject.setStatusAsync({ shouldPlay: false });
+    return await playBackObject.setStatusAsync({ uri }, { shouldPlay: false });
   } catch (error) {
     console.log("error pausing", error.message);
   }
