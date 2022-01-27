@@ -5,6 +5,7 @@ import OptionModal from "../components/OptionModal";
 import { AudioContext } from "../context/AudioProvider";
 import { Audio } from "expo-av";
 import { pause, play, playNext, resume } from "../misc/AudioController";
+import { Entypo } from "@expo/vector-icons";
 
 interface MusicListProps {
   //   music: string;r
@@ -17,7 +18,7 @@ const MusicList = () => {
   const {
     audioFiles,
     currentAudio,
-    selectedIndex,
+    selectedId,
     soundObject,
     isPlaying,
     setIsPlaying,
@@ -25,7 +26,7 @@ const MusicList = () => {
     setSoundObject,
     setCurrentAudio,
     setPlayBackObject,
-    setSelectedIndex,
+    setSelectedId,
   } = useContext(AudioContext);
 
   const onPressPlay = () => {
@@ -51,6 +52,7 @@ const MusicList = () => {
         setCurrentAudio(audioFiles);
         setPlayBackObject(playBackObject);
         setIsPlaying(true);
+        setSelectedId(audioFiles.id);
         return;
       }
 
@@ -79,6 +81,7 @@ const MusicList = () => {
         setSoundObject(status);
         setCurrentAudio(audioFiles);
         setIsPlaying(true);
+        setSelectedId(audioFiles.id);
       }
     } catch (error) {
       console.log(error);
@@ -86,8 +89,16 @@ const MusicList = () => {
   }
 
   // const name = item.name === selectedIndex ? item.name : "nnnnnn"
+  const getThumbnailText = (filename: string) => filename[0];
 
-  // console.log(audioFiles);
+  const renderPlayPauseIcon = (isPlaying) => {
+    if (isPlaying) {
+      return <Entypo name="controller-paus" size={20} color="black" />;
+    } else {
+      return <Entypo name="controller-play" size={20} color="black" />;
+    }
+  };
+
   return (
     <>
       <FlatList
@@ -97,7 +108,12 @@ const MusicList = () => {
             <MusicListItem
               isPlaying={isPlaying}
               title={item.filename}
-              duration={item.id === selectedIndex ? 888 : 9999999}
+              duration={item.duration}
+              thumbnail={
+                item.id === selectedId
+                  ? renderPlayPauseIcon(isPlaying)
+                  : getThumbnailText(item.filename)
+              }
               onPress={() => {
                 setCurrentItem(item);
                 setModalVisible(true);
@@ -107,7 +123,7 @@ const MusicList = () => {
           );
         }}
         keyExtractor={(item) => item.id}
-        extraData={selectedIndex}
+        extraData={selectedId}
       />
       <OptionModal
         onPressPlay={onPressPlay}

@@ -14,7 +14,7 @@ const AudioProvider = ({ children }: string | any) => {
   const [currentAudio, setCurrentAudio] = useState({});
   const [isPlaying, setIsPlaying] = useState(false);
   // const [currentIndex, setCurrentIndex] = useState(null);
-  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
 
   const permissionAlert = () => {
     Alert.alert(
@@ -102,13 +102,13 @@ const AudioProvider = ({ children }: string | any) => {
           soundObject,
           currentAudio,
           isPlaying,
-          selectedIndex,
+          selectedId,
           setIsPlaying,
           setCurrentAudio,
           setSoundObject,
           setAudioFiles,
           setPlayBackObject,
-          setSelectedIndex,
+          setSelectedId,
         }}
       >
         {children}

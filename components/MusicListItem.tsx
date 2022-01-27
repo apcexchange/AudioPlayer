@@ -44,6 +44,7 @@ const MusicListItem = ({
   onPress,
   onAudioPress,
   isPlaying,
+  thumbnail,
 }) => {
   // const { isPlaying } = useContext(AudioContext);
 
@@ -61,9 +62,7 @@ const MusicListItem = ({
         <TouchableWithoutFeedback onPress={onAudioPress}>
           <View style={styles.subContainer}>
             <View style={styles.thumbnailContainer}>
-              <Text style={styles.thumbnail}>
-                {renderPlayPauseIcon(isPlaying)}
-              </Text>
+              <Text style={styles.thumbnail}>{thumbnail}</Text>
             </View>
             <View style={styles.titleContainer}>
               <Text style={styles.title} numberOfLines={1}>
