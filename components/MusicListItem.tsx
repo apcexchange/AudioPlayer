@@ -38,14 +38,6 @@ const convertTime = (minutes: number) => {
   }
 };
 
-const renderPlayPauseIcon = (isPlaying) => {
-  if (isPlaying) {
-    return <Entypo name="controller-paus" size={20} color="black" />;
-  } else {
-    return <Entypo name="controller-play" size={20} color="black" />;
-  }
-};
-
 const MusicListItem = ({
   title,
   duration,
@@ -53,6 +45,16 @@ const MusicListItem = ({
   onAudioPress,
   isPlaying,
 }) => {
+  // const { isPlaying } = useContext(AudioContext);
+
+  const renderPlayPauseIcon = (isPlaying) => {
+    if (isPlaying) {
+      return <Entypo name="controller-paus" size={20} color="black" />;
+    } else {
+      return <Entypo name="controller-play" size={20} color="black" />;
+    }
+  };
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
