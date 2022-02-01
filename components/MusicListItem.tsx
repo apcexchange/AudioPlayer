@@ -48,13 +48,13 @@ const MusicListItem = ({
 }) => {
   // const { isPlaying } = useContext(AudioContext);
 
-  const renderPlayPauseIcon = (isPlaying) => {
-    if (isPlaying) {
-      return <Entypo name="controller-paus" size={20} color="black" />;
-    } else {
-      return <Entypo name="controller-play" size={20} color="black" />;
-    }
-  };
+  // const renderPlayPauseIcon = (isPlaying) => {
+  //   if (isPlaying) {
+  //     return <Entypo name="controller-paus" size={20} color="black" />;
+  //   } else {
+  //     return <Entypo name="controller-play" size={20} color="black" />;
+  //   }
+  // };
 
   return (
     <SafeAreaView>

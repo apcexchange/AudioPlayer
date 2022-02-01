@@ -11,6 +11,7 @@ import {
   MaterialCommunityIcons,
   FontAwesome5,
 } from "@expo/vector-icons";
+import Favorite from "../screens/Favorite";
 
 interface AppNavigatorProps {}
 
@@ -35,6 +36,17 @@ const AppNavigator = (props: AppNavigatorProps) => {
           tabBarIcon: ({ size, color }) => {
             return (
               <FontAwesome5 name="compact-disc" size={size} color={color} />
+            );
+          },
+        }}
+      />
+      <Screen
+        name="favorite"
+        component={Favorite}
+        options={{
+          tabBarIcon: ({ size, color }) => {
+            return (
+              <MaterialIcons name="favorite-border" size={size} color={color} />
             );
           },
         }}
