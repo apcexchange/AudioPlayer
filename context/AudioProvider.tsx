@@ -15,6 +15,7 @@ const AudioProvider = ({ children }: string | any) => {
   const [isPlaying, setIsPlaying] = useState(false);
   // const [currentIndex, setCurrentIndex] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
+  const [totalCount, setTotalCount] = useState(0);
 
   const permissionAlert = () => {
     Alert.alert(
@@ -75,8 +76,8 @@ const AudioProvider = ({ children }: string | any) => {
     media = await MediaLibrary.getAssetsAsync({
       mediaType: "audio",
       first: media.totalCount,
-    }).catch((error) => console.log(error));
-
+    }).catch((error: any) => console.log(error));
+    setTotalCount(media.totalCount);
     setAudioFiles(media.assets);
   };
 
@@ -109,6 +110,7 @@ const AudioProvider = ({ children }: string | any) => {
           setAudioFiles,
           setPlayBackObject,
           setSelectedId,
+          totalCount,
         }}
       >
         {children}

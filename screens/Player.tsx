@@ -1,18 +1,25 @@
 import MaterialCommunityIcons from "@expo/vector-icons/build/MaterialCommunityIcons";
 import Slider from "@react-native-community/slider";
-import * as React from "react";
+import React, { useContext } from "react";
 import { Text, View, StyleSheet, Dimensions } from "react-native";
-import { Entypo } from "@expo/vector-icons";
-import AntDesign from "@expo/vector-icons/build/AntDesign";
+import { Entypo, AntDesign } from "@expo/vector-icons";
+import PlayButton from "../components/PlayButton";
+import { AudioContext } from "../context/AudioProvider";
 
 const { width } = Dimensions.get("window");
 interface PlayerProps {}
 
 const Player = () => {
+  const handlePress = () => {
+    console.log("pressed");
+  };
+
+  const { totalCount } = useContext(AudioContext);
+
   return (
     <View style={styles.container}>
       <View style={styles.audioCountContainer}>
-        <Text style={styles.audioCount}>1/100</Text>
+        <Text style={styles.audioCount}>`1/{totalCount}`</Text>
       </View>
       <View style={styles.midBannerContainer}>
         <MaterialCommunityIcons name="music-circle" size={300} color="black" />
@@ -28,29 +35,18 @@ const Player = () => {
             minimumValue={0}
             maximumValue={1}
             minimumTrackTintColor="red"
-            maximumTrackTintColor="green"
+            maximumTrackTintColor="blue"
           />
           <Text> 4:00 </Text>
         </View>
         <View style={styles.controlContainer}>
-          <Entypo
-            name="controller-fast-backward"
-            size={30}
-            color="black"
-            style={{ marginHorizontal: 10 }}
+          <PlayButton
+            iconType="PREV"
+            onPress={handlePress}
+            style={{ marginHorizontal: 15 }}
           />
-          <AntDesign
-            name="play"
-            size={30}
-            color="black"
-            style={{ marginHorizontal: 10 }}
-          />
-          <Entypo
-            name="controller-fast-forward"
-            size={30}
-            color="black"
-            style={{ marginHorizontal: 10 }}
-          />
+          <PlayButton iconType="PLAY" style={{ marginHorizontal: 15 }} />
+          <PlayButton iconType="NEXT" style={{ marginHorizontal: 15 }} />
         </View>
       </View>
     </View>

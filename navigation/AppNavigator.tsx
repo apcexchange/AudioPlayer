@@ -73,5 +73,7 @@ const AppNavigator = (props: AppNavigatorProps) => {
 export default AppNavigator;
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+  
+  },
 });
